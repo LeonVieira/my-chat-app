@@ -1,33 +1,25 @@
-// src/App.js
-import React, { useState } from 'react';
-import ChatLog from './ChatLog';
-import InputForm from './InputForm';
+import logo from './logo.svg';
+import './App.css';
 
-const App = () => {
-  const [messages, setMessages] = useState([
-    // Initial messages if any
-  ]);
-
-  const sendMessageToServer = async (message) => {
-    try {
-      const response = await fetch('/api/ask', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message }),
-      });
-      const data = await response.json();
-      setMessages([...messages, { sender: 'You', text: message }, { sender: 'AI', text: data.response }]);
-    } catch (error) {
-      console.error('Error:', error);
-    }
-  };
-
+function App() {
   return (
-    <div className="app">
-      <ChatLog messages={messages} />
-      <InputForm sendMessage={sendMessageToServer} />
+    <div className="App">
+      <header className="App-header">
+        <img src={logo} className="App-logo" alt="logo" />
+        <p>
+          Edit <code>src/App.js</code> and save to reload.
+        </p>
+        <a
+          className="App-link"
+          href="https://reactjs.org"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Learn React
+        </a>
+      </header>
     </div>
   );
-};
+}
 
 export default App;
