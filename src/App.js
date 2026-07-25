@@ -1,23 +1,41 @@
-import logo from './logo.svg';
 import './App.css';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+    <div className="app">
+
+      <header className="header">
+        <h2>LocalChat</h2>
+
+        <select>
+          <option>Qwen3-VL 8B</option>
+        </select>
       </header>
+
+      <main className="chat">
+        <div className="welcome">
+          <h1>LocalChat</h1>
+          <p>Chat with AI models running locally on your computer.</p>
+        </div>
+      </main>
+
+      <div className="input-area">
+        <div className="input-box">
+          <button className="attach-button">+</button>
+
+          <input
+            type="text"
+            placeholder="Message Qwen..."
+          />
+
+          <button className="send-button">Send</button>
+        </div>
+
+        <p className="status">
+          Local model • Qwen3-VL 8B
+        </p>
+      </div>
+
     </div>
   );
 }

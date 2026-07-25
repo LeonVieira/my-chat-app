@@ -1,40 +1,127 @@
-.App {
-  text-align: center;
+* {
+  box-sizing: border-box;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-
-  
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #181818;
   color: white;
 }
 
-.App-link {
-  color: #61dafb;
+.app {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.header {
+  height: 65px;
+  padding: 0 24px;
+  border-bottom: 1px solid #333;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.header h2 {
+  margin: 0;
+}
+
+.header select {
+  background: #282828;
+  color: white;
+  border: 1px solid #444;
+  border-radius: 8px;
+  padding: 8px 12px;
+}
+
+.chat {
+  flex: 1;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.welcome {
+  text-align: center;
+}
+
+.welcome h1 {
+  font-size: 42px;
+  margin-bottom: 10px;
+}
+
+.welcome p {
+  color: #999;
+}
+
+.input-area {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.input-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  background: #282828;
+  border: 1px solid #444;
+  border-radius: 16px;
+
+  padding: 10px;
+}
+
+.input-box input {
+  flex: 1;
+
+  background: transparent;
+  border: none;
+  outline: none;
+
+  color: white;
+  font-size: 16px;
+}
+
+.input-box input::placeholder {
+  color: #888;
+}
+
+.attach-button,
+.send-button {
+  border: none;
+  cursor: pointer;
+}
+
+.attach-button {
+  width: 36px;
+  height: 36px;
+
+  border-radius: 50%;
+  background: #444;
+  color: white;
+
+  font-size: 22px;
+}
+
+.send-button {
+  background: white;
+  color: black;
+
+  padding: 9px 16px;
+  border-radius: 10px;
+
+  font-weight: bold;
+}
+
+.status {
+  text-align: center;
+  color: #777;
+  font-size: 12px;
+  margin-bottom: 0;
 }
