@@ -1,6 +1,6 @@
 import "./App.css";
 import { useEffect, useState } from "react";
-import { testOllamaConnection } from "./services/ollamaService";
+import { sendMessageToOllama } from "./services/ollamaService";
 
 function App() {
   const [message, setMessage] = useState("");
@@ -13,7 +13,7 @@ function App() {
     setMessage("");
   };
   useEffect(() => {
-    testOllamaConnection()
+    sendMessageToOllama("What is 5+5?")
       .then((data) => {
         console.log("Connected to Qwen!");
         console.log(data.message.content);
