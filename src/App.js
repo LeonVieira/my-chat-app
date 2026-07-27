@@ -1,6 +1,8 @@
 import "./App.css";
 import { useEffect, useState } from "react";
 import { sendMessageToOllama } from "./services/ollamaService";
+import ChatInput from "./components/chat/ChatInput";
+
 
 function App() {
   const [message, setMessage] = useState("");
@@ -51,22 +53,14 @@ function App() {
       </main>
 
       <div className="input-area">
-        <div className="input-box">
-          <button className="attach-button">+</button>
+  
 
-          <input
-            type="text"
-            placeholder="Message Qwen..."
-            value={message}
-            onChange={(event) => setMessage(event.target.value)}
-          />
+      <ChatInput
+        message={message}
+        setMessage={setMessage}
+        onSend={sendMessage}
+      />
 
-          <button className="send-button" onClick={sendMessage}>
-            Send
-          </button>
-        </div>
-
-        <p className="status">Local model • Qwen3-VL 8B</p>
       </div>
     </div>
   );
