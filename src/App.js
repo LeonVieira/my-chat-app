@@ -1,8 +1,8 @@
 import "./App.css";
 import { useEffect, useState } from "react";
 import { sendMessageToOllama } from "./services/ollamaService";
-import ChatInput from "./components/chat/ChatInput";
-
+import ChatInput from "./components/Main area/ChatInput";
+import Sidebar from "./components/sidebar/Sidebar";
 
 function App() {
   const [message, setMessage] = useState("");
@@ -25,8 +25,11 @@ function App() {
       });
   }, []);
 
-  return (
-    <div className="app">
+ return (
+  <div className="app">
+    <Sidebar />
+
+    <div className="main-content">
       <header className="header">
         <h2>LocalChat</h2>
 
@@ -52,18 +55,14 @@ function App() {
         )}
       </main>
 
-      <div className="input-area">
-  
-
       <ChatInput
         message={message}
         setMessage={setMessage}
         onSend={sendMessage}
       />
-
-      </div>
     </div>
-  );
+  </div>
+);
 }
 
 export default App;
