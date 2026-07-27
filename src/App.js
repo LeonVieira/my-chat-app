@@ -9,28 +9,38 @@ function App() {
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
  
-  const sendMessage = async () => {
+const sendMessage = async () => {
   if (!message.trim()) return;
 
   const userMessage = message;
 
-  setMessages([...messages, userMessage]);
+  setMessages((currentMessages) => [
+    ...currentMessages,
+    {
+      role: "user",
+      content: userMessage,
+    },
+  ]);
+
   setMessage("");
   setIsLoading(true);
 
   try {
-    console.log("Sending to Qwen:", userMessage);
-
     const data = await sendMessageToOllama(userMessage);
 
-    console.log("Qwen response:", data.message.content);
+    setMessages((currentMessages) => [
+      ...currentMessages,
+      {
+        role: "assistant",
+        content: data.message.content,
+      },
+    ]);
   } catch (error) {
     console.error("Failed to get response from Qwen:", error);
   } finally {
     setIsLoading(false);
   }
 };
-
 
   useEffect(() => {
     sendMessageToOllama("What is 5+5?")
@@ -77,11 +87,18 @@ function App() {
     <>
       <main className="chat">
         <div className="messages">
-          {messages.map((msg, index) => (
-            <div className="user-message" key={index}>
-              {msg}
-            </div>
-          ))}
+{messages.map((msg, index) => (
+  <div
+    key={index}
+    className={
+      msg.role === "user"
+        ? "user-message"
+        : "assistant-message"
+    }
+  >
+    {msg.content}
+  </div>
+))}
 
                     {isLoading && (
             <div className="assistant-loading">
