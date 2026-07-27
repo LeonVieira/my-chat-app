@@ -7,14 +7,16 @@ import Sidebar from "./components/sidebar/Sidebar";
 function App() {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
-
-const sendMessage = async () => {
+  const [isLoading, setIsLoading] = useState(false);
+ 
+  const sendMessage = async () => {
   if (!message.trim()) return;
 
   const userMessage = message;
 
   setMessages([...messages, userMessage]);
   setMessage("");
+  setIsLoading(true);
 
   try {
     console.log("Sending to Qwen:", userMessage);
@@ -24,8 +26,12 @@ const sendMessage = async () => {
     console.log("Qwen response:", data.message.content);
   } catch (error) {
     console.error("Failed to get response from Qwen:", error);
+  } finally {
+    setIsLoading(false);
   }
 };
+
+
   useEffect(() => {
     sendMessageToOllama("What is 5+5?")
       .then((data) => {
@@ -76,6 +82,13 @@ const sendMessage = async () => {
               {msg}
             </div>
           ))}
+
+                    {isLoading && (
+            <div className="assistant-loading">
+              <span className="loading-dot"></span>
+              Qwen is thinking...
+            </div>
+          )}
         </div>
       </main>
 
