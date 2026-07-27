@@ -6,12 +6,17 @@ function ChatInput({ message, setMessage, onSend }) {
           +
         </button>
 
-        <input
-          type="text"
-          placeholder="Message Qwen..."
-          value={message}
-          onChange={(event) => setMessage(event.target.value)}
-        />
+<input
+  type="text"
+  placeholder="Message Qwen..."
+  value={message}
+  onChange={(event) => setMessage(event.target.value)}
+  onKeyDown={(event) => {
+    if (event.key === "Enter") {
+      onSend();
+    }
+  }}
+/>
 
         <button
           className="send-button"
