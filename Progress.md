@@ -4,12 +4,20 @@
 
 ## Where I left off
 
-LocalChat now has a working basic chat experience using a locally hosted Qwen3-VL 8B model through Ollama.
+LocalChat has a working basic chat experience using a locally hosted Qwen3-VL 8B model through Ollama.
 
-### Working
+Conversation context now works, so Qwen receives the current conversation history rather than only the newest user message.
+
+A basic PostgreSQL backend/database proof-of-concept has also been completed.
+
+---
+
+## Working
+
+### Chat
 
 - Basic LocalChat UI
-- Sidebar layout with placeholder:
+- Sidebar layout with placeholders for:
   - New chat
   - Projects
   - Recent chats
@@ -22,6 +30,9 @@ LocalChat now has a working basic chat experience using a locally hosted Qwen3-V
 - Loading / "thinking" indicator while waiting for Qwen
 - Chat area scrolls independently for long conversations
 - Header, sidebar and input remain in place while scrolling
+
+### Ollama / Qwen
+
 - Ollama API communication is handled through `ollamaService.js`
 - Qwen3-VL 8B is installed and working locally
 - Qwen3-VL supports:
@@ -30,83 +41,170 @@ LocalChat now has a working basic chat experience using a locally hosted Qwen3-V
   - Thinking
   - Tools
 
-## Current limitation
+### Conversation context
 
-Qwen currently receives only the newest user message.
+Conversation context now works.
 
-For example:
+React stores messages approximately as:
 
-User:
-> Explain React state.
+    {
+      role: "user",
+      content: "Hello"
+    }
 
-Qwen:
-> ...
+and:
 
-User:
-> Explain that in fewer sentences.
+    {
+      role: "assistant",
+      content: "Hello!"
+    }
 
-Qwen does not know what "that" refers to because the previous conversation is not being sent back to Ollama.
+When sending a new message, the existing conversation plus the new user
+message is passed to `sendMessageToOllama()`.
 
-The React `messages` array already contains the conversation, but `sendMessageToOllama()` currently sends only the newest message.
-
-## Next small goal — Conversation context
-
-Send the existing conversation history to Ollama with each request.
-
-Instead of sending:
+Ollama therefore receives the conversation as:
 
     messages: [
       {
         role: "user",
-        content: message
-      }
-    ]
-
-send the conversation as:
-
-    messages: [
-      {
-        role: "user",
-        content: "Explain React state."
+        content: "My favourite number is 42."
       },
       {
         role: "assistant",
-        content: "React state is..."
+        content: "Got it."
       },
       {
         role: "user",
-        content: "Explain that in fewer sentences."
+        content: "What is my favourite number?"
       }
     ]
 
-### Test
+This was tested successfully.
 
-Ask Qwen:
+Qwen correctly remembered that the favourite number was 42 and could refer
+to its own previous response.
 
-> My favourite number is 42.
+Conversation history is currently IN MEMORY ONLY.
 
-Then:
+Refreshing the page loses the conversation.
 
-> What is my favourite number?
+---
 
-Qwen should answer:
+## PostgreSQL experiment
 
-> 42
+PostgreSQL has been installed locally on Ubuntu.
 
-This history only needs to exist in React memory for now.
+DBeaver is being used to manage the database.
 
-Do NOT implement saved chats or persistence yet.
+Database:
 
-## After that — Image / screenshot experiment
+    localchat
+
+Development database user:
+
+    localchat_user
+
+A basic table currently exists:
+
+    messages
+
+with approximately:
+
+    id
+    role
+    content
+
+A test row was inserted:
+
+    user | Hello from PostgreSQL!
+
+### Node database connection
+
+The `pg` package has been installed.
+
+Backend-related code has started under:
+
+    server/
+    ├── services/
+    │   └── databaseService.js
+    └── databaseTest.js
+
+`databaseService.js` contains a basic `getMessages()` function that connects
+to PostgreSQL and runs:
+
+    SELECT * FROM messages
+
+`databaseTest.js` calls the service and logs the returned messages.
+
+This was tested successfully and Node returned the PostgreSQL row.
+
+### Database credentials
+
+Database configuration is stored in:
+
+    .env
+
+using variables such as:
+
+    DB_HOST
+    DB_PORT
+    DB_NAME
+    DB_USER
+    DB_PASSWORD
+
+`.env` is included in `.gitignore` and was verified using:
+
+    git check-ignore .env
+
+Do NOT move PostgreSQL access into `src/`.
+
+`src/` is the React/browser application.
+
+Database access belongs under `server/` because database credentials and
+direct PostgreSQL access should not be exposed to the browser.
+
+Eventually the architecture should become:
+
+    React
+      ↓
+    Backend API
+      ↓
+    PostgreSQL
+
+The database work is currently only a proof-of-concept.
+
+React does NOT read or save conversations to PostgreSQL yet.
+
+---
+
+## Current limitations
+
+- Conversations disappear when the page is refreshed
+- PostgreSQL is not connected to the React UI
+- No backend HTTP API exists yet
+- New Chat button is still visual only
+- Recent chats are placeholders
+- Projects are placeholders
+- Qwen responses render as plain text
+- Images/screenshots cannot be attached yet
+- Responses are not streamed
+- Model selector is visual only
+
+Do NOT attempt to solve all of these together.
+
+---
+
+## Next small goal — Image / screenshot experiment
 
 Qwen3-VL supports vision.
 
-Add a basic image attachment to `ChatInput`.
+Use the existing + button in `ChatInput` to prove that one image can be sent
+to Qwen.
 
 Initial goal:
 
 1. Click the + button
-2. Select a PNG/JPG screenshot
+2. Select one PNG/JPG screenshot
 3. Send the image with a text prompt
 4. Pass the image to Qwen3-VL through Ollama
 5. Display Qwen's response
@@ -115,16 +213,79 @@ Example:
 
 > What is happening in this screenshot?
 
-For the first version, image preview, drag-and-drop and saved attachments are NOT required.
+For the first version, do NOT add:
 
-Just prove:
+- Drag-and-drop
+- Multiple images
+- Persistent images
+- Galleries
+- Fancy attachment management
 
-    React → Image → Ollama → Qwen3-VL → Response
+A simple image preview is optional.
 
-## Later improvements
+First prove:
+
+    React
+      ↓
+    Image + prompt
+      ↓
+    Ollama
+      ↓
+    Qwen3-VL
+      ↓
+    Response
+
+---
+
+## Sensible milestones after vision
+
+Potential small features after the image proof-of-concept:
 
 - Markdown rendering for Qwen responses
 - Extract `ChatMessage` component
+- New Chat button resets the current in-memory conversation
+- Better error display
+- Better loading/generation status
+- Streaming responses
+- Stop generation button
+
+### Persistence later
+
+PostgreSQL can eventually be used for:
+
+    Projects
+       ↓
+    Chats
+       ↓
+    Messages
+
+A backend API should sit between React and PostgreSQL.
+
+Do NOT connect React directly to PostgreSQL.
+
+Possible future flow:
+
+    User selects previous chat
+            ↓
+    React requests chat from backend
+            ↓
+    Backend loads messages from PostgreSQL
+            ↓
+    React displays messages
+            ↓
+    Messages can also be supplied to Ollama as conversation context
+
+Long conversations will eventually require context-window management rather
+than sending every stored message to the model forever.
+
+This is a later problem.
+
+---
+
+## Later improvements
+
+- Markdown rendering
+- ChatMessage component
 - Better loading/generation status
 - Display model thinking when supported
 - Streaming responses
@@ -133,9 +294,35 @@ Just prove:
 - Drag-and-drop images
 - Model selector populated from Ollama
 - New chat functionality
-- Previous chat persistence
+- Saved chat history
 - Chat titles
 - Pinned chats/projects
 - Project context
 - Settings page
-- Error handling
+- Better error handling
+- Backend API
+- PostgreSQL chat persistence
+- User/login support if eventually needed
+
+---
+
+## Working style
+
+Keep changes SMALL.
+
+Preferred workflow:
+
+    implement one feature
+        ↓
+    test it
+        ↓
+    understand it
+        ↓
+    commit it
+        ↓
+    next feature
+
+Do not redesign or rebuild working parts of the application unnecessarily.
+
+The next session should build on the current code rather than replacing it
+with a more sophisticated architecture.
