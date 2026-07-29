@@ -12,21 +12,23 @@ function App() {
 const sendMessage = async () => {
   if (!message.trim()) return;
 
-  const userMessage = message;
+  const newUserMessage = {
+    role: "user",
+    content: message,
+  };
 
-  setMessages((currentMessages) => [
-    ...currentMessages,
-    {
-      role: "user",
-      content: userMessage,
-    },
-  ]);
+  const updatedMessages = [
+    ...messages,
+    newUserMessage,
+  ];
+
+  setMessages(updatedMessages);
 
   setMessage("");
   setIsLoading(true);
 
   try {
-    const data = await sendMessageToOllama(userMessage);
+    const data = await sendMessageToOllama(updatedMessages);
 
     setMessages((currentMessages) => [
       ...currentMessages,
@@ -42,16 +44,6 @@ const sendMessage = async () => {
   }
 };
 
-  useEffect(() => {
-    sendMessageToOllama("What is 5+5?")
-      .then((data) => {
-        console.log("Connected to Qwen!");
-        console.log(data.message.content);
-      })
-      .catch((error) => {
-        console.error("Failed to connect to Ollama:", error);
-      });
-  }, []);
 
  return (
   <div className="app">
