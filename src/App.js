@@ -1,6 +1,8 @@
 import "./App.css";
 import { useEffect, useState } from "react";
 import { sendMessageToOllama } from "./services/ollamaService";
+import { getMessages } from "./services/chatService";
+
 import ChatInput from "./components/Main area/ChatInput";
 import Sidebar from "./components/sidebar/Sidebar";
 
@@ -8,7 +10,17 @@ function App() {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
- 
+   useEffect(() => {
+    getMessages()
+      .then((data) => {
+        console.log("Messages from backend:");
+        console.log(data);
+      })
+      .catch((error) => {
+        console.error("Failed to load messages:", error);
+      });
+  }, []);
+
 const sendMessage = async () => {
   if (!message.trim()) return;
 
@@ -21,6 +33,8 @@ const sendMessage = async () => {
     ...messages,
     newUserMessage,
   ];
+
+  
 
   setMessages(updatedMessages);
 
