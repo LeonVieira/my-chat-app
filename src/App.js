@@ -12,6 +12,15 @@ function App() {
 
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+
+useEffect(() => {
+
+    if (!selectedImage) return;
+
+    console.log(selectedImage);
+
+}, [selectedImage]);
+
    useEffect(() => {
     getMessages()
       .then((data) => {

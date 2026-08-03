@@ -1,17 +1,52 @@
 import React, { useState } from "react";
 import ImageUpload from "./ImageUpload";
-function ChatInput({ message, setMessage, onSend , setSelectedImage}) {
+import ImagePreview from "./ImagePreview";
+import "./ChatInput.css";
 
 
+function ChatInput({
+    message,
+    setMessage,
+    selectedImage,
+    setSelectedImage,
+    onSend
+}) {
+
+const handlePaste = (event) => {
+  const items = event.clipboardData.items;
+
+  for (const item of items) {
+
+    if (item.type.startsWith("image/")) {
+
+      const file = item.getAsFile();
+
+      setSelectedImage(file);
+
+      console.log("Screenshot pasted!");
+
+      event.preventDefault();
+
+      return;
+    }
+  }
+};
 
   return (
     <div className="input-area">
-      <div className="input-box">
-<ImageUpload
-    onImageSelected={setSelectedImage}
+   
+
+<ImagePreview
+    image={selectedImage}
+    onRemove={() => setSelectedImage(null)}
 />
 
-<input
+<div className="input-box">
+  <ImageUpload
+    onImageSelected={setSelectedImage}
+/>
+  
+  <input
   type="text"
   placeholder="Message Qwen..."
   value={message}
@@ -21,6 +56,7 @@ function ChatInput({ message, setMessage, onSend , setSelectedImage}) {
       onSend();
     }
   }}
+  onPaste={handlePaste}
 />
 
         <button
