@@ -1,10 +1,15 @@
-function ChatInput({ message, setMessage, onSend }) {
+import React, { useState } from "react";
+import ImageUpload from "./ImageUpload";
+function ChatInput({ message, setMessage, onSend , setSelectedImage}) {
+
+
+
   return (
     <div className="input-area">
       <div className="input-box">
-        <button className="attach-button">
-          +
-        </button>
+<ImageUpload
+    onImageSelected={setSelectedImage}
+/>
 
 <input
   type="text"

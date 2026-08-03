@@ -8,6 +8,8 @@ import Sidebar from "./components/sidebar/Sidebar";
 
 function App() {
   const [message, setMessage] = useState("");
+  const [selectedImage, setSelectedImage] = useState(null);
+
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
    useEffect(() => {
@@ -81,11 +83,13 @@ const sendMessage = async () => {
           <p>Chat with AI models running locally on your computer.</p>
         </div>
 
-        <ChatInput
-          message={message}
-          setMessage={setMessage}
-          onSend={sendMessage}
-        />
+<ChatInput
+    message={message}
+    setMessage={setMessage}
+    selectedImage={selectedImage}
+    setSelectedImage={setSelectedImage}
+    onSend={sendMessage}
+/>
 
       </div>
     </main>
@@ -115,11 +119,13 @@ const sendMessage = async () => {
         </div>
       </main>
 
-      <ChatInput
-        message={message}
-        setMessage={setMessage}
-        onSend={sendMessage}
-      />
+<ChatInput
+    message={message}
+    setMessage={setMessage}
+    selectedImage={selectedImage}
+    setSelectedImage={setSelectedImage}
+    onSend={sendMessage}
+/>
     </>
   )}
 
