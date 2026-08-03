@@ -33,8 +33,9 @@ useEffect(() => {
   }, []);
 
 const sendMessage = async () => {
-  if (!message.trim()) return;
-
+  if (!message.trim() && !selectedImage) {
+    return;
+}
   const newUserMessage = {
     role: "user",
     content: message,
@@ -53,8 +54,10 @@ const sendMessage = async () => {
   setIsLoading(true);
 
   try {
-    const data = await sendMessageToOllama(updatedMessages);
-
+const data = await sendMessageToOllama(
+    updatedMessages,
+    selectedImage
+);
     setMessages((currentMessages) => [
       ...currentMessages,
       {

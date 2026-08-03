@@ -51,11 +51,11 @@ const handlePaste = (event) => {
   placeholder="Message Qwen..."
   value={message}
   onChange={(event) => setMessage(event.target.value)}
-  onKeyDown={(event) => {
-    if (event.key === "Enter") {
-      onSend();
-    }
-  }}
+onKeyDown={(event) => {
+  if (event.key === "Enter") {
+    onSend();
+  }
+}}
   onPaste={handlePaste}
 />
 
